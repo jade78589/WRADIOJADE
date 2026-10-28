@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#05080f">
+  <meta name="description" content="WRADIO JADE DE COLOMBIA: música, compañía y buena energía en vivo.">
+  <title>WRADIO JADE DE COLOMBIA | En Vivo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Orbitron:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05080f;
+      --panel: rgba(10, 17, 30, .92);
+      --blue: #168cff;
+      --blue-light: #70c7ff;
+      --gold: #f4c45e;
+      --white: #f4f7ff;
+      --muted: #aab6c9;
+      --line: rgba(91, 167, 255, .24);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--white);
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(0, 103, 255, .22), transparent 38%),
+        linear-gradient(180deg, #070b14, #03050a 72%);
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    a { color: inherit; text-decoration: none; }
+    .topline {
+      min-height: 38px; display: flex; align-items: center; justify-content: center;
+      gap: 10px; padding: 8px 15px; background: #070b12; border-bottom: 1px solid var(--line);
+      color: var(--blue-light); font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #ff244f; box-shadow: 0 0 12px #ff244f; animation: pulse 1.3s infinite; }
+    header {
+      min-height: 440px; position: relative; overflow: hidden; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center; padding: 55px 20px 70px;
+      background:
+        linear-gradient(180deg, rgba(3,6,12,.48), rgba(3,6,12,.86)),
+        radial-gradient(ellipse at 50% 70%, rgba(0,132,255,.28), transparent 48%),
+        repeating-linear-gradient(90deg, transparent 0 79px, rgba(80,150,255,.045) 80px 81px),
+        repeating-linear-gradient(0deg, transparent 0 79px, rgba(80,150,255,.045) 80px 81px),
+        #080d17;
+      border-bottom: 1px solid rgba(244,196,94,.3);
+    }
+    header::before, header::after {
+      content: ""; position: absolute; width: 360px; height: 360px; border: 1px solid rgba(22,140,255,.17);
+      border-radius: 50%; pointer-events: none; animation: orbit 24s linear infinite;
+    }
+    header::before { top: -190px; left: -120px; box-shadow: 0 0 70px rgba(22,140,255,.14), inset 0 0 55px rgba(22,140,255,.1); }
+    header::after { bottom: -260px; right: -100px; width: 470px; height: 470px; animation-direction: reverse; }
+    .brand-mark {
+      width: 112px; height: 112px; display: grid; place-items: center; border-radius: 50%;
+      border: 2px solid var(--gold); background: linear-gradient(145deg, #111b2c, #05080f);
+      box-shadow: 0 0 0 7px rgba(244,196,94,.07), 0 0 35px rgba(22,140,255,.42);
+      color: var(--gold); font: 800 31px 'Orbitron', sans-serif; margin-bottom: 22px;
+    }
+    h1 { margin: 0; font: 800 clamp(29px, 5.5vw, 58px)/1.12 'Orbitron', sans-serif; letter-spacing: 1px; text-shadow: 0 0 22px rgba(22,140,255,.4); }
+    h1 span { color: var(--gold); }
+    .tagline { margin: 16px 0 23px; color: #d5e4fb; font-size: clamp(12px, 2vw, 16px); letter-spacing: 3px; text-transform: uppercase; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .btn {
+      border: 1px solid var(--gold); border-radius: 999px; padding: 13px 23px; font-weight: 800;
+      font-size: 12px; letter-spacing: 1px; text-transform: uppercase; transition: .2s; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-primary { color: #07101b; background: linear-gradient(135deg, #ffe7a1, var(--gold)); box-shadow: 0 0 24px rgba(244,196,94,.17); }
+    .btn-outline { background: rgba(5,8,15,.45); color: var(--white); border-color: var(--blue); }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(22,140,255,.3); }
+    nav {
+      position: sticky; top: 0; z-index: 10; display: flex; justify-content: center; flex-wrap: wrap; gap: 4px;
+      padding: 10px 12px; background: rgba(5,8,15,.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line);
+    }
+    nav a { padding: 12px 14px; color: #d8e3f5; font-size: 10px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; border-radius: 4px; }
+    nav a:hover { color: var(--gold); background: rgba(22,140,255,.1); }
+    main { width: min(1120px, 92%); margin: 0 auto; }
+    section { padding: 58px 0; scroll-margin-top: 72px; }
+    .section-kicker { color: var(--blue-light); text-align: center; text-transform: uppercase; letter-spacing: 4px; font-size: 10px; font-weight: 800; }
+    h2 { text-align: center; font: 700 clamp(23px, 3vw, 34px) 'Orbitron', sans-serif; margin: 10px 0 13px; }
+    h2 span { color: var(--gold); }
+    .section-intro { max-width: 650px; margin: 0 auto 28px; text-align: center; color: var(--muted); font-size: 13px; line-height: 1.8; }
+    .radio-card, .card {
+      background: linear-gradient(145deg, rgba(15,25,43,.95), rgba(5,9,16,.98));
+      border: 1px solid var(--line); border-radius: 15px; box-shadow: 0 18px 55px rgba(0,0,0,.28);
+    }
+    .radio-card { max-width: 760px; margin: 0 auto; padding: 28px; text-align: center; position: relative; overflow: hidden; }
+    .radio-card::before { content: ""; position: absolute; width: 220px; height: 220px; top: -140px; left: calc(50% - 110px); border-radius: 50%; background: var(--blue); filter: blur(100px); opacity: .22; }
+    .equalizer { height: 42px; display: flex; justify-content: center; align-items: center; gap: 5px; margin: 10px auto 18px; }
+    .equalizer i { display: block; width: 5px; border-radius: 5px; background: linear-gradient(var(--blue-light), var(--gold)); animation: bars .8s ease-in-out infinite alternate; }
+    .equalizer i:nth-child(3n) { animation-delay: -.5s; } .equalizer i:nth-child(2n) { animation-delay: -.25s; }
+    .radio-status { color: var(--gold); font-size: 11px; letter-spacing: 2px; font-weight: 800; }
+    audio { width: 100%; max-width: 560px; margin: 18px 0 10px; accent-color: var(--blue); }
+    .small-note { color: var(--muted); font-size: 11px; line-height: 1.7; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 17px; }
+    .card { padding: 23px; min-height: 155px; }
+    .card-icon { font-size: 28px; margin-bottom: 13px; }
+    .card h3 { margin: 0 0 10px; color: var(--gold); font: 700 15px 'Orbitron', sans-serif; }
+    .card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+    .chat-box { max-width: 900px; margin: 0 auto; overflow: hidden; }
+    .chat-head { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: rgba(22,140,255,.1); border-bottom: 1px solid var(--line); }
+    .chat-head strong { color: var(--gold); font-size: 12px; letter-spacing: 1px; }
+    .chat-body { padding: 35px 22px; text-align: center; }
+    .chat-body p { max-width: 620px; margin: 10px auto 18px; color: var(--muted); font-size: 12px; line-height: 1.8; }
+    .chat-placeholder { max-width: 660px; margin: 0 auto; border: 1px dashed rgba(112,199,255,.45); border-radius: 10px; padding: 22px; background: rgba(0,0,0,.18); }
+    .request-panel { max-width: 760px; margin: auto; text-align: center; padding: 32px 20px; border: 1px solid rgba(244,196,94,.35); border-radius: 15px; background: radial-gradient(ellipse at top, rgba(22,140,255,.15), transparent 65%), #080d17; }
+    .request-panel p { color: var(--muted); font-size: 12px; line-height: 1.8; }
+    .contact-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .social { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line); color: var(--gold); font-weight: 800; background: #0b1321; }
+    .social:hover { background: var(--blue); color: white; }
+    footer { border-top: 1px solid rgba(244,196,94,.25); background: #03050a; text-align: center; padding: 28px 16px; color: var(--muted); font-size: 10px; letter-spacing: 1.5px; line-height: 2; }
+    footer strong { color: var(--gold); }
+    .backtop { display: inline-block; margin-top: 12px; color: var(--blue-light); }
+    @keyframes pulse { 50% { opacity: .35; transform: scale(.8); } }
+    @keyframes bars { from { height: 7px; } to { height: 36px; } }
+    @keyframes orbit { to { transform: rotate(360deg); } }
+    @media (max-width: 720px) {
+      header { min-height: 390px; padding-top: 45px; }
+      .brand-mark { width: 90px; height: 90px; font-size: 25px; }
+      nav { position: relative; }
+      nav a { padding: 10px 9px; font-size: 9px; }
+      .grid { grid-template-columns: 1fr; }
+      section { padding: 43px 0; }
+      .radio-card { padding: 23px 15px; }
+      .chat-head { align-items: flex-start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body>
+  <div class="topline"><span class="live-dot"></span> WRADIO JADE DE COLOMBIA · Música que nos conecta</div>
+
+  <header id="inicio">
+    <div class="brand-mark" aria-label="Logo DJ Jade">JADE</div>
+    <h1>W<span>RADIO JADE</span></h1>
+    <div class="tagline">De Colombia para el mundo</div>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#radio">▶ Escuchar en vivo</a>
+      <a class="btn btn-outline" href="#chat">💬 Chat de oyentes</a>
+    </div>
+  </header>
+
+  <nav aria-label="Menú principal">
+    <a href="#inicio">Inicio</a>
+    <a href="#radio">Señal en vivo</a>
+    <a href="#chat">Chat</a>
+    <a href="#programacion">Programación</a>
+    <a href="#galeria">Galería</a>
+    <a href="#locutores">Locutores</a>
+    <a href="#solicitudes">Pide tu canción</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+
+  <main>
+    <section id="radio">
+      <div class="section-kicker">La música nunca se detiene</div>
+      <h2>Escúchanos <span>EN VIVO</span></h2>
+      <p class="section-intro">Conéctate con WRADIO JADE DE COLOMBIA y disfruta de nuestra señal desde tu computador o celular.</p>
+      <div class="radio-card">
+        <div class="radio-status"><span class="live-dot" style="display:inline-block;margin-right:8px"></span> SEÑAL DE RADIO</div>
+        <div class="equalizer" aria-hidden="true">
+          <i style="height:16px"></i><i style="height:28px"></i><i style="height:20px"></i><i style="height:35px"></i><i style="height:13px"></i><i style="height:26px"></i><i style="height:34px"></i><i style="height:18px"></i><i style="height:30px"></i><i style="height:12px"></i><i style="height:25px"></i><i style="height:36px"></i><i style="height:17px"></i><i style="height:29px"></i><i style="height:21px"></i>
+        </div>
+        <h3 style="font-family:Orbitron,sans-serif;margin:0 0 5px">WRADIO JADE</h3>
+        <p class="small-note">Tu compañía musical, estés donde estés.</p>
+        <audio controls preload="none">
+          <source src="https://stream.zeno.fm/o9xaggtrr1xtv" type="audio/mpeg">
+          Tu navegador no puede reproducir esta señal. Prueba con otro navegador.
+        </audio>
+        <div class="small-note">Pulsa ▶ para comenzar. Si la señal no carga, revisaremos el enlace de transmisión.</div>
+      </div>
+    </section>
+
+    <section id="chat">
+      <div class="section-kicker">Comparte y participa</div>
+      <h2>Chat de <span>Oyentes</span></h2>
+      <p class="section-intro">Un punto de encuentro para saludar, compartir buena energía y acompañarnos mientras suena la radio.</p>
+      <div class="card chat-box">
+        <div class="chat-head"><strong>💬 CHAT EN VIVO · WRADIO JADE</strong><span class="small-note">Espacio para la comunidad</span></div>
+        <div class="chat-body">
+          <div style="font-size:38px">🎙️ 💬 🎶</div>
+          <div class="chat-placeholder">
+            <strong style="color:var(--gold)">¡Aquí irá el chat real de tus oyentes!</strong>
+            <p>Para conectar un chat en el que todos puedan escribir y leer mensajes en tiempo real, necesitamos insertar el enlace o código de tu sala de chat (por ejemplo, tu sala de Xat). El diseño ya está preparado para recibirlo.</p>
+            <span class="small-note">No se muestra un chat ficticio: conectaremos tu sala real cuando nos compartas su enlace.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="programacion">
+      <div class="section-kicker">Acompañándote cada día</div>
+      <h2>Nuestra <span>Programación</span></h2>
+      <p class="section-intro">Un espacio para presentar tus programas, especiales musicales y horarios. Estos textos se pueden personalizar cuando me compartas tu programación.</p>
+      <div class="grid">
+        <article class="card"><div class="card-icon">🌅</div><h3>Buenos días, Colombia</h3><p>Música para empezar el día con alegría y energía positiva.</p></article>
+        <article class="card"><div class="card-icon">🎶</div><h3>Éxitos musicales</h3><p>Una selección para disfrutar, recordar y cantar tus canciones favoritas.</p></article>
+        <article class="card"><div class="card-icon">🌙</div><h3>Noches con Jade</h3><p>Un encuentro musical para cerrar el día en buena compañía.</p></article>
+      </div>
+    </section>
+
+    <section id="galeria">
+      <div class="section-kicker">Momentos especiales</div>
+      <h2>Galería <span>DJ JADE</span></h2>
+      <p class="section-intro">Aquí pondremos tus fotografías y las imágenes de WRADIO JADE. Cuando me compartas las fotos o sus enlaces, las integramos en esta sección.</p>
+      <div class="grid">
+        <article class="card" style="text-align:center"><div class="card-icon">📸</div><h3>DJ JADE</h3><p>Espacio reservado para tu fotografía principal.</p></article>
+        <article class="card" style="text-align:center"><div class="card-icon">🎧</div><h3>La emisora</h3><p>Imágenes de la radio y sus momentos musicales.</p></article>
+        <article class="card" style="text-align:center"><div class="card-icon">💙</div><h3>Nuestra comunidad</h3><p>Recuerdos para compartir con los oyentes.</p></article>
+      </div>
+    </section>
+
+    <section id="locutores">
+      <div class="section-kicker">Las voces que te acompañan</div>
+      <h2>Locutores <span>y Amigos</span></h2>
+      <p class="section-intro">Podemos añadir las fotografías, nombres, programas y horarios de los locutores de tu emisora.</p>
+      <div class="card" style="text-align:center;max-width:760px;margin:auto">
+        <div class="card-icon">🎙️</div>
+        <h3>DJ JADE</h3>
+        <p>La anfitriona de WRADIO JADE DE COLOMBIA.<br>Pronto podremos completar esta sección con tu presentación y la de tus colaboradores.</p>
+      </div>
+    </section>
+
+    <section id="solicitudes">
+      <div class="section-kicker">Tú eliges la música</div>
+      <h2>Solicita tu <span>Canción</span></h2>
+      <div class="request-panel">
+        <div style="font-size:38px">🎵</div>
+        <p>¿Qué canción quieres escuchar? Podemos recibir tus solicitudes por WhatsApp, formulario o por el chat de la emisora.</p>
+        <a class="btn btn-primary" href="#contacto">Solicitar una canción</a>
+        <p class="small-note">Cuando me indiques el medio que prefieres, conectaremos este botón.</p>
+      </div>
+    </section>
+
+    <section id="contacto">
+      <div class="section-kicker">Conectemos</div>
+      <h2>Contacto <span>y Redes</span></h2>
+      <p class="section-intro">Gracias por ser parte de WRADIO JADE DE COLOMBIA. Aquí podemos colocar tus redes oficiales y el medio para contactar a la emisora.</p>
+      <div class="contact-row" aria-label="Redes sociales por configurar">
+        <a class="social" href="#contacto" aria-label="Facebook">f</a>
+        <a class="social" href="#contacto" aria-label="YouTube">▶</a>
+        <a class="social" href="#contacto" aria-label="Instagram">◎</a>
+        <a class="social" href="#contacto" aria-label="WhatsApp">✆</a>
+      </div>
+      <p class="small-note" style="text-align:center;margin-top:18px">Los botones de redes son espacios provisionales hasta añadir tus enlaces reales.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div>♥ <strong>WRADIO JADE DE COLOMBIA</strong> ♥</div>
+    <div>MÚSICA · AMISTAD · BUENA ENERGÍA</div>
+    <div>Diseñado con cariño para <strong>DJ JADE</strong></div>
+    <a class="backtop" href="#inicio">↑ Volver al inicio</a>
+  </footer>
+</body>
+</html>
