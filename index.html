@@ -175,23 +175,90 @@
       </div>
     </section>
 
-    <section id="chat">
-      <div class="section-kicker">Comparte y participa</div>
-      <h2>Chat de <span>Oyentes</span></h2>
-      <p class="section-intro">Un punto de encuentro para saludar, compartir buena energía y acompañarnos mientras suena la radio.</p>
-      <div class="card chat-box">
-        <div class="chat-head"><strong>💬 CHAT EN VIVO · WRADIO JADE</strong><span class="small-note">Espacio para la comunidad</span></div>
-        <div class="chat-body">
-          <div style="font-size:38px">🎙️ 💬 🎶</div>
-          <div class="chat-placeholder">
-            <strong style="color:var(--gold)">¡Aquí irá el chat real de tus oyentes!</strong>
-            <p>Para conectar un chat en el que todos puedan escribir y leer mensajes en tiempo real, necesitamos insertar el enlace o código de tu sala de chat (por ejemplo, tu sala de Xat). El diseño ya está preparado para recibirlo.</p>
-            <span class="small-note">No se muestra un chat ficticio: conectaremos tu sala real cuando nos compartas su enlace.</span>
+  
+<section id="chat">
+  <div class="section-kicker">Comparte y participa</div>
+  <h2>Chat de <span>Oyentes</span></h2>
+  <p class="section-intro">
+    Saluda y comparte buena energía con la comunidad de WRADIO JADE.
+  </p>
+
+  <div class="card chat-box">
+    <div class="chat-head">
+      <strong>💬 CHAT EN VIVO · WRADIO JADE</strong>
+      <span class="small-note">🎙️ Señal en vivo</span>
+    </div>
+
+    <div style="padding:22px;">
+      <div id="jade-auth-panel" class="chat-placeholder">
+        <h3 style="color:var(--gold);text-align:center;">
+          💙 Bienvenido a WRADIO JADE
+        </h3>
+        <p>Regístrate o inicia sesión para participar.</p>
+
+        <label for="jade-nickname">Apodo</label>
+        <input id="jade-nickname" type="text" maxlength="24"
+          placeholder="Tu apodo"
+          autocomplete="nickname"
+          style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
+
+        <label for="jade-email">Correo electrónico</label>
+        <input id="jade-email" type="email"
+          placeholder="Tu correo electrónico"
+          autocomplete="email"
+          style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
+
+        <label for="jade-password">Contraseña</label>
+        <input id="jade-password" type="password" minlength="8"
+          placeholder="Mínimo 8 caracteres"
+          autocomplete="current-password"
+          style="display:block;width:100%;padding:12px;margin:8px 0 15px;">
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;">
+          <button class="btn btn-primary" type="button" id="jade-register">
+            Crear cuenta
+          </button>
+          <button class="btn btn-outline" type="button" id="jade-login">
+            Iniciar sesión
+          </button>
+        </div>
+
+        <p id="jade-auth-status" role="status" aria-live="polite">
+          Completa tus datos para continuar.
+        </p>
+      </div>
+
+      <div id="jade-chat-panel" hidden>
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+          <strong id="jade-welcome" style="color:var(--gold);"></strong>
+          <button class="btn btn-outline" type="button" id="jade-logout">
+            Cerrar sesión
+          </button>
+        </div>
+
+        <div style="margin-top:18px;border:1px solid var(--line);border-radius:10px;padding:15px;min-height:220px;">
+          <strong style="color:var(--blue-light);">💬 Mensajes públicos</strong>
+          <div id="jade-messages" aria-live="polite" style="margin-top:15px;">
+            Conectaremos aquí los mensajes reales.
           </div>
         </div>
-      </div>
-    </section>
 
+        <form id="jade-message-form" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
+          <input id="jade-message-input" type="text" maxlength="2000"
+            placeholder="Escribe tu mensaje…"
+            aria-label="Mensaje público"
+            style="flex:1;min-width:180px;padding:12px;">
+          <button class="btn btn-primary" type="submit">Enviar 💙</button>
+        </form>
+
+        <p class="small-note" style="margin-top:12px;">
+          💌 Después añadiremos los mensajes privados, las fotos de perfil y los emojis.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
++
     <section id="programacion">
       <div class="section-kicker">Acompañándote cada día</div>
       <h2>Nuestra <span>Programación</span></h2>
@@ -256,5 +323,256 @@
     <div>Diseñado con cariño para <strong>DJ JADE</strong></div>
     <a class="backtop" href="#inicio">↑ Volver al inicio</a>
   </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(() => {
+  const SUPABASE_URL = "https://tanomhhqizkbyssehhar.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_O1d6CJ7XH25wKBIcay2LRQ_-G46CR8p";
+
+  const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const nicknameInput = document.getElementById("jade-nickname");
+  const emailInput = document.getElementById("jade-email");
+  const passwordInput = document.getElementById("jade-password");
+  const authStatus = document.getElementById("jade-auth-status");
+  const authPanel = document.getElementById("jade-auth-panel");
+  const chatPanel = document.getElementById("jade-chat-panel");
+  const welcome = document.getElementById("jade-welcome");
+  const messagesBox = document.getElementById("jade-messages");
+  const messageInput = document.getElementById("jade-message-input");
+  const messageForm = document.getElementById("jade-message-form");
+
+  let currentUser = null;
+  let currentProfile = null;
+  let messageChannel = null;
+
+  function status(text) {
+    if (authStatus) authStatus.textContent = text;
+  }
+
+  function safeText(tag, text) {
+    const el = document.createElement(tag);
+    el.textContent = text;
+    return el;
+  }
+
+  async function loadMessages() {
+    if (!currentUser || !messagesBox) return;
+
+    const { data, error } = await client
+      .from("chat_messages")
+      .select("id,nickname,content,created_at")
+      .order("created_at", { ascending: true })
+      .limit(100);
+
+    if (error) {
+      messagesBox.replaceChildren(
+        safeText("p", "No se pudieron cargar los mensajes. Intenta nuevamente.")
+      );
+      console.error(error);
+      return;
+    }
+
+    messagesBox.replaceChildren();
+
+    if (!data || data.length === 0) {
+      messagesBox.appendChild(safeText("p", "¡Sé la primera persona en saludar! 💙"));
+      return;
+    }
+
+    data.forEach((msg) => {
+      const item = document.createElement("div");
+      item.style.cssText =
+        "padding:10px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere;";
+
+      const heading = document.createElement("div");
+      heading.style.cssText = "color:var(--gold);font-weight:bold;";
+      heading.textContent = msg.nickname + " · " +
+        new Date(msg.created_at).toLocaleString("es-CO");
+
+      const body = document.createElement("div");
+      body.style.cssText = "margin-top:5px;white-space:pre-wrap;";
+      body.textContent = msg.content;
+
+      item.append(heading, body);
+      messagesBox.appendChild(item);
+    });
+
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+  }
+
+  async function showChat(user) {
+    currentUser = user;
+
+    const { data, error } = await client
+      .from("chat_profiles")
+      .select("id,nickname,avatar_url")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (error) {
+      status("No pudimos consultar tu perfil. Recarga la página e inténtalo de nuevo.");
+      console.error(error);
+      return;
+    }
+
+    if (!data) {
+      authPanel.hidden = false;
+      chatPanel.hidden = true;
+      status("Esta cuenta todavía no tiene perfil. Cierra sesión e intenta registrarte de nuevo.");
+      return;
+    }
+
+    currentProfile = data;
+    authPanel.hidden = true;
+    chatPanel.hidden = false;
+    welcome.textContent = "💙 Bienvenido/a, " + data.nickname;
+
+    await loadMessages();
+
+    if (messageChannel) {
+      await client.removeChannel(messageChannel);
+    }
+
+    messageChannel = client
+      .channel("jade-public-chat")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "chat_messages" },
+        () => loadMessages()
+      )
+      .subscribe();
+  }
+
+  document.getElementById("jade-register").addEventListener("click", async () => {
+    const nickname = nicknameInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (nickname.length < 2 || nickname.length > 24) {
+      status("Tu apodo debe tener entre 2 y 24 caracteres.");
+      return;
+    }
+
+    if (!email || password.length < 8) {
+      status("Escribe tu correo y una contraseña de al menos 8 caracteres.");
+      return;
+    }
+
+    status("Creando tu cuenta…");
+
+    const { data, error } = await client.auth.signUp({
+      email,
+      password,
+      options: { data: { nickname } }
+    });
+
+    if (error) {
+      status("No se pudo crear la cuenta: " + error.message);
+      return;
+    }
+
+    if (!data.user || !data.session) {
+      status("La cuenta se creó, pero no hay sesión activa. Revisa la configuración de confirmación de correo en Supabase.");
+      return;
+    }
+
+    const { error: profileError } = await client
+      .from("chat_profiles")
+      .insert({
+        id: data.user.id,
+        nickname,
+        avatar_url: null
+      });
+
+    if (profileError) {
+      status("La cuenta se creó, pero no pudimos guardar el apodo. Puede que ya esté ocupado. Mensaje: " + profileError.message);
+      return;
+    }
+
+    status("¡Cuenta creada! Entrando al chat…");
+    await showChat(data.user);
+  });
+
+  document.getElementById("jade-login").addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+      status("Escribe tu correo y contraseña para entrar.");
+      return;
+    }
+
+    status("Iniciando sesión…");
+
+    const { data, error } = await client.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      status("No se pudo iniciar sesión: " + error.message);
+      return;
+    }
+
+    await showChat(data.user);
+  });
+
+  document.getElementById("jade-logout").addEventListener("click", async () => {
+    if (messageChannel) {
+      await client.removeChannel(messageChannel);
+      messageChannel = null;
+    }
+
+    await client.auth.signOut();
+    currentUser = null;
+    currentProfile = null;
+    chatPanel.hidden = true;
+    authPanel.hidden = false;
+    status("Has cerrado sesión. Puedes volver a entrar cuando quieras.");
+  });
+
+  messageForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (!currentUser || !currentProfile) {
+      status("Inicia sesión para enviar mensajes.");
+      return;
+    }
+
+    const content = messageInput.value.trim();
+    if (!content) return;
+
+    messageInput.disabled = true;
+
+    const { error } = await client.from("chat_messages").insert({
+      user_id: currentUser.id,
+      nickname: currentProfile.nickname,
+      content
+    });
+
+    messageInput.disabled = false;
+
+    if (error) {
+      status("No se pudo enviar el mensaje. Intenta nuevamente.");
+      console.error(error);
+      return;
+    }
+
+    messageInput.value = "";
+    await loadMessages();
+  });
+
+  client.auth.getSession().then(({ data, error }) => {
+    if (error) {
+      status("No pudimos comprobar tu sesión.");
+      return;
+    }
+    if (data.session) showChat(data.session.user);
+  });
+})();
+</script>
+
 </body>
 </html>
